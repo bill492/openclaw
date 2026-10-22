@@ -38,7 +38,7 @@ runs:
       uses: actions/setup-node@v6
       with:
         node-version: ${{ inputs.node-version }}
-        check-latest: false
+        check-latest: true
 
     - name: Setup pnpm + cache store
       uses: ./.github/actions/setup-pnpm-store-cache

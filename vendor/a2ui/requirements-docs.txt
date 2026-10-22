@@ -1,4 +1,5 @@
 mkdocs-material
+certifi>=2026.10.19
 mkdocs-redirects
 mkdocs-macros-plugin
 mkdocs-llmstxt
