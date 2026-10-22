@@ -11,6 +11,7 @@ import {
   ensureProfileCleanExit,
   findChromeExecutableMac,
   findChromeExecutableWindows,
+  getChromeWebSocketUrl,
   isChromeCdpReady,
   isChromeReachable,
   resolveBrowserExecutableForPlatform,
@@ -20,6 +21,7 @@ import {
   DEFAULT_OPENCLAW_BROWSER_COLOR,
   DEFAULT_OPENCLAW_BROWSER_PROFILE_NAME,
 } from "../../extensions/browser/src/browser/constants.js";
+import { SsrFBlockedError } from "../infra/net/ssrf.js";
 
 type StopChromeTarget = Parameters<typeof stopOpenClawChrome>[0];
 
@@ -39,6 +41,7 @@ async function readDefaultProfileFromLocalState(
 
 async function withMockChromeCdpServer(params: {
   wsPath: string;
+  discoveredHost?: string;
   onConnection?: (wss: WebSocketServer) => void;
   run: (baseUrl: string) => Promise<void>;
 }) {
@@ -48,7 +51,7 @@ async function withMockChromeCdpServer(params: {
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(
         JSON.stringify({
-          webSocketDebuggerUrl: `ws://127.0.0.1:${addr.port}${params.wsPath}`,
+          webSocketDebuggerUrl: `ws://${params.discoveredHost ?? "127.0.0.1"}:${addr.port}${params.wsPath}`,
         }),
       );
       return;
@@ -99,6 +102,20 @@ function makeChromeTestProc(overrides?: Partial<{ killed: boolean; exitCode: num
 }
 
 describe("browser chrome profile decoration", () => {
+  it("checks discovered WebSocket destinations against the CDP endpoint policy", async () => {
+    await withMockChromeCdpServer({
+      wsPath: "/devtools/browser/TEST",
+      discoveredHost: "169.254.169.254",
+      run: async (baseUrl) => {
+        await expect(
+          getChromeWebSocketUrl(baseUrl, 1500, {
+            dangerouslyAllowPrivateNetwork: true,
+            hostnameAllowlist: ["127.0.0.1"],
+          }),
+        ).rejects.toBeInstanceOf(SsrFBlockedError);
+      },
+    });
+  });
   let fixtureRoot = "";
   let fixtureCount = 0;
 

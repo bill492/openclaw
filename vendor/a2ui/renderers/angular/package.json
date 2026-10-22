@@ -6,7 +6,7 @@
   },
   "dependencies": {
     "@a2ui/lit": "file:../lit",
-    "markdown-it": "^14.1.0",
+    "markdown-it": "^14.3.3",
     "tslib": "^2.3.0"
   },
   "peerDependencies": {
@@ -25,7 +25,7 @@
     "@types/markdown-it": "^14.1.2",
     "@types/node": "^20.17.19",
     "@types/uuid": "^10.0.0",
-    "@vitest/browser": "^4.0.15",
+    "@vitest/browser": "^4.1.12",
     "cypress": "^15.6.0",
     "google-artifactregistry-auth": "^3.5.0",
     "jasmine-core": "~5.9.0",
@@ -41,7 +41,7 @@
     "sass": "^1.93.2",
     "tslib": "^2.8.1",
     "typescript": "~5.9.2",
-    "vitest": "^4.0.15"
+    "vitest": "^4.1.12"
   },
   "sideEffects": false,
   "prettier": {

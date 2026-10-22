@@ -1,0 +1,32 @@
+name: Fork security dependency regressions
+
+on:
+  push:
+    branches: [bill/security-advisories-20261021]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser-regressions:
+    if: github.repository == 'bill492/openclaw'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24.22.1
+      - uses: pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa # v4
+        with:
+          version: 10.32.1
+      - name: Install frozen dependencies without lifecycle scripts
+        run: pnpm install --frozen-lockfile --ignore-scripts --config.minimumReleaseAge=0
+      - name: Browser CDP regression tests
+        env:
+          OPENCLAW_TEST_PROFILE: serial
+          OPENCLAW_TEST_SERIAL_GATEWAY: "1"
+        run: pnpm test -- src/browser/cdp.test.ts src/browser/chrome.test.ts src/dockerfile.test.ts
+      - name: Build
+        run: pnpm build

@@ -799,7 +799,7 @@
     "@mariozechner/pi-ai": "0.61.1",
     "@mariozechner/pi-coding-agent": "0.61.1",
     "@mariozechner/pi-tui": "0.61.1",
-    "@modelcontextprotocol/sdk": "1.27.1",
+    "@modelcontextprotocol/sdk": "1.32.0",
     "@mozilla/readability": "^0.6.0",
     "@sinclair/typebox": "0.34.48",
     "ajv": "^8.18.0",
@@ -819,7 +819,7 @@
     "jszip": "^3.10.1",
     "linkedom": "^0.18.12",
     "long": "^5.3.2",
-    "markdown-it": "^14.1.1",
+    "markdown-it": "^14.3.3",
     "node-edge-tts": "^1.2.10",
     "osc-progress": "^0.3.0",
     "pdfjs-dist": "^5.5.207",
@@ -845,7 +845,7 @@
     "@types/qrcode-terminal": "^0.12.2",
     "@types/ws": "^8.18.1",
     "@typescript/native-preview": "7.0.0-dev.20260322.1",
-    "@vitest/coverage-v8": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.12",
     "jscpd": "4.0.8",
     "jsdom": "^29.0.1",
     "lit": "^3.3.2",
@@ -856,7 +856,7 @@
     "tsdown": "0.21.4",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.12"
   },
   "peerDependencies": {
     "@napi-rs/canvas": "^0.1.89",

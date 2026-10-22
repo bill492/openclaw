@@ -200,7 +200,10 @@ export async function getChromeWebSocketUrl(
   if (!wsUrl) {
     return null;
   }
-  return normalizeCdpWsUrl(wsUrl, cdpUrl);
+  const normalizedWsUrl = normalizeCdpWsUrl(wsUrl, cdpUrl);
+  // Discovery is lower-trust input and may name a different network destination.
+  await assertCdpEndpointAllowed(normalizedWsUrl, ssrfPolicy);
+  return normalizedWsUrl;
 }
 
 async function canRunCdpHealthCommand(

@@ -159,6 +159,22 @@ describe("cdp", () => {
     expect(receivedHeaders.host).toBe(`127.0.0.1:${wsPort}`);
   });
 
+  it("rejects a discovered CDP WebSocket outside the endpoint allowlist", async () => {
+    const httpPort = await startVersionHttpServer({
+      webSocketDebuggerUrl: "ws://169.254.169.254:9222/devtools/browser/TEST",
+    });
+    await expect(
+      createTargetViaCdp({
+        cdpUrl: `http://127.0.0.1:${httpPort}`,
+        url: "http://127.0.0.1:8080",
+        ssrfPolicy: {
+          dangerouslyAllowPrivateNetwork: true,
+          hostnameAllowlist: ["127.0.0.1"],
+        },
+      }),
+    ).rejects.toBeInstanceOf(SsrFBlockedError);
+  });
+
   it("still enforces SSRF policy for direct WebSocket URLs", async () => {
     const fetchSpy = vi.spyOn(globalThis, "fetch");
     try {

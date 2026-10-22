@@ -1,6 +1,7 @@
 import type { SsrFPolicy } from "../infra/net/ssrf.js";
 import {
   appendCdpPath,
+  assertCdpEndpointAllowed,
   fetchJson,
   isLoopbackHost,
   isWebSocketUrl,
@@ -111,6 +112,7 @@ export async function createTargetViaCdp(opts: {
   });
 
   let wsUrl: string;
+  await assertCdpEndpointAllowed(opts.cdpUrl, opts.ssrfPolicy);
   if (isWebSocketUrl(opts.cdpUrl)) {
     // Direct WebSocket URL — skip /json/version discovery.
     wsUrl = opts.cdpUrl;
@@ -127,6 +129,7 @@ export async function createTargetViaCdp(opts: {
     }
   }
 
+  await assertCdpEndpointAllowed(wsUrl, opts.ssrfPolicy);
   return await withCdpSocket(wsUrl, async (send) => {
     const created = (await send("Target.createTarget", { url: opts.url })) as {
       targetId?: string;
